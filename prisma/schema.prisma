@@ -1,0 +1,129 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id         String    @id @default(uuid())
+    username   String    @unique
+    name       String
+    password   String
+    role       Role
+    division   Division? @relation(fields: [divisionId], references: [id], onDelete: SetNull)
+    divisionId String?
+
+    transactions Transaction[]
+    createdAt    DateTime      @default(now())
+}
+
+model Division {
+    id           String              @id @default(uuid())
+    name         String              @unique
+    users        User[]
+    transactions Transaction[]
+    transfers    TransferToCentral[]
+
+    incomeAccount    Account? @relation("DivisionIncome", fields: [incomeAccountId], references: [id])
+    incomeAccountId  String?  @unique
+    expenseAccount   Account? @relation("DivisionExpense", fields: [expenseAccountId], references: [id])
+    expenseAccountId String?  @unique
+
+    accounts            Account[]             @relation("DivisionAccounts")
+    monthlyDivisionBill MonthlyDivisionBill[]
+}
+
+model Account {
+    id         String      @id @default(uuid())
+    name       String
+    type       AccountType
+    isCentral  Boolean
+    division   Division?   @relation("DivisionAccounts", fields: [divisionId], references: [id], onDelete: SetNull)
+    divisionId String?
+
+    incomeDivision  Division? @relation("DivisionIncome")
+    expenseDivision Division? @relation("DivisionExpense")
+
+    createdAt    DateTime      @default(now())
+    transactions Transaction[]
+}
+
+model Transaction {
+    id          String          @id @default(uuid())
+    account     Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
+    accountId   String
+    division    Division?       @relation(fields: [divisionId], references: [id], onDelete: SetNull)
+    divisionId  String?
+    amount      Int
+    description String
+    type        TransactionType
+    date        DateTime        @default(now())
+
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
+
+    fromTransfer TransferToCentral? @relation("FromTransfer")
+    toTransfer   TransferToCentral? @relation("ToTransfer")
+}
+
+model TransferToCentral {
+    id             String   @id @default(uuid())
+    fromDivision   Division @relation(fields: [fromDivisionId], references: [id], onDelete: Cascade)
+    fromDivisionId String
+    amount         Int
+    date           DateTime @default(now())
+    description    String?
+
+    fromTransaction   Transaction @relation("FromTransfer", fields: [fromTransactionId], references: [id], onDelete: Cascade)
+    fromTransactionId String      @unique
+
+    toTransaction   Transaction @relation("ToTransfer", fields: [toTransactionId], references: [id], onDelete: Cascade)
+    toTransactionId String      @unique
+
+    MonthlyDivisionBill MonthlyDivisionBill? @relation("BillTransfer")
+}
+
+enum Role {
+    PUSAT
+    DIVISI
+}
+
+enum AccountType {
+    INCOME
+    EXPENSE
+    ALLOCATION
+}
+
+enum TransactionType {
+    INCOME
+    EXPENSE
+}
+
+model MonthlyDivisionBill {
+    id         String   @id @default(uuid())
+    division   Division @relation(fields: [divisionId], references: [id], onDelete: Cascade)
+    divisionId String
+
+    year   Int // contoh: 2025
+    month  Int // contoh: 6 (Juni)
+    amount Int
+    status BillStatus
+    paidAt DateTime?
+
+    transfer   TransferToCentral? @relation("BillTransfer", fields: [transferId], references: [id])
+    transferId String?            @unique
+
+    dueDate   DateTime?
+    createdAt DateTime  @default(now())
+
+    @@unique([divisionId, year, month])
+    @@index([status])
+}
+
+enum BillStatus {
+    UNPAID
+    PAID
+}
