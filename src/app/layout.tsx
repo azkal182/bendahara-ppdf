@@ -13,6 +13,9 @@ import { getSystemMode } from '@core/utils/serverHelpers'
 // Style Imports
 import '@/app/globals.css'
 
+// eslint-disable-next-line import/order
+import { Toaster } from 'react-hot-toast'
+
 // Generated Icon CSS Imports
 import '@assets/iconify-icons/generated-icons.css'
 
