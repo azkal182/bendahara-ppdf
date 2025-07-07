@@ -151,7 +151,7 @@ jobs:
               pm2 stop bendahara
               pm2 delete bendahara
             fi
-            pm2 start npm --name "bendahara" -- start -- -p 9090
+            pm2 start npm --name "bendahara" -- start -- -p 8899
             exit
           EOF
 
