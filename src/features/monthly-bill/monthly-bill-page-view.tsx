@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import type { SelectChangeEvent } from '@mui/material'
-import { Card, CardContent, CircularProgress, MenuItem, Tab, Typography } from '@mui/material'
+import { Card, CardContent, CircularProgress, MenuItem, Tab } from '@mui/material'
 
 import TabList from '@mui/lab/TabList'
 
@@ -135,6 +135,7 @@ const MonthlyBillPageView = () => {
                 defaultValue={''}
                 slotProps={{
                   select: {
+                    // @ts-ignore
                     onChange: handleDivisionChange
                   }
                 }}

@@ -45,6 +45,7 @@ export default function UserDialog({ open, onCloseAction, onSubmitAction, initia
         divisionId: undefined
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData, form.reset])
 
   const formOnSubmit = (data: UserFormData) => {

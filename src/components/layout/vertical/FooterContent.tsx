@@ -14,6 +14,7 @@ import { verticalLayoutClasses } from '@layouts/utils/layoutClasses'
 
 const FooterContent = () => {
   // Hooks
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { isBreakpointReached } = useVerticalNav()
 
   return (

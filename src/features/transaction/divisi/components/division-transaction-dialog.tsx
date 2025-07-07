@@ -67,6 +67,7 @@ const DivisionTransactionDialog = ({
         type: 'INCOME'
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData, form.reset])
 
   return (

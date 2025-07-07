@@ -45,6 +45,7 @@ const DivisionDialog = ({ open, onCloseAction, onSubmitAction, initialData }: Di
         id: ''
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData, formDivision.reset])
 
   return (

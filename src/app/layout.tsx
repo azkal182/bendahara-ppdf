@@ -15,7 +15,6 @@ import '@/app/globals.css'
 
 // Generated Icon CSS Imports
 import '@assets/iconify-icons/generated-icons.css'
-import { Toaster } from 'react-hot-toast'
 
 export const metadata = {
   title: 'Bendahara Pusat PPDF',

@@ -45,6 +45,7 @@ export default function MonthYearPicker({ defaultMonth, defaultYear, onChange }:
       onChange?.(defaultMonth ?? nowMonth, defaultYear ?? nowYear)
       hasFiredDefault.current = true
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultMonth, defaultYear, onChange])
 
   const handleMonthChange = (event: any) => {

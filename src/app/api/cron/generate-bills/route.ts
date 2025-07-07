@@ -9,53 +9,52 @@ export async function GET() {
 
     const tomorrow = now.plus({ days: 1 })
 
-    // if (tomorrow.month !== now.month) {
-    const year = now.year
-    const month = now.month
+    if (tomorrow.month !== now.month) {
+      const year = now.year
+      const month = now.month
 
-    const startOfMonth = DateTime.local(year, month, 1).startOf('day').toUTC()
-    const endOfMonth = DateTime.local(year, month, 1).endOf('month').toUTC()
+      const startOfMonth = DateTime.local(year, month, 1).startOf('day').toUTC()
+      const endOfMonth = DateTime.local(year, month, 1).endOf('month').toUTC()
 
-    const divisions = await prisma.division.findMany()
+      const divisions = await prisma.division.findMany()
 
-    for (const division of divisions) {
-      const existing = await prisma.monthlyDivisionBill.findFirst({
-        where: { divisionId: division.id, year, month }
-      })
+      for (const division of divisions) {
+        const existing = await prisma.monthlyDivisionBill.findFirst({
+          where: { divisionId: division.id, year, month }
+        })
 
-      if (existing) continue
+        if (existing) continue
 
-      const incomeSum = await prisma.transaction.aggregate({
-        _sum: { amount: true },
-        where: {
-          divisionId: division.id,
-          type: 'INCOME',
-          date: {
-            gte: startOfMonth.toJSDate(),
-            lte: endOfMonth.toJSDate()
-          }
-        }
-      })
-
-      const total = incomeSum._sum.amount || 0
-      const amount = Math.floor(total * 0.4)
-
-      if (amount > 0) {
-        await prisma.monthlyDivisionBill.create({
-          data: {
+        const incomeSum = await prisma.transaction.aggregate({
+          _sum: { amount: true },
+          where: {
             divisionId: division.id,
-            year,
-            month,
-            amount,
-            status: 'UNPAID'
+            type: 'INCOME',
+            date: {
+              gte: startOfMonth.toJSDate(),
+              lte: endOfMonth.toJSDate()
+            }
           }
         })
 
-        console.log(`✅ Created bill for ${division.name}: Rp ${amount}`)
+        const total = incomeSum._sum.amount || 0
+        const amount = Math.floor(total * 0.4)
+
+        if (amount > 0) {
+          await prisma.monthlyDivisionBill.create({
+            data: {
+              divisionId: division.id,
+              year,
+              month,
+              amount,
+              status: 'UNPAID'
+            }
+          })
+
+          console.log(`✅ Created bill for ${division.name}: Rp ${amount}`)
+        }
       }
     }
-
-    // }
 
     return new Response(JSON.stringify({ success: true }))
   } catch (err) {

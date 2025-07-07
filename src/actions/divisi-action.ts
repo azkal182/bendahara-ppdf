@@ -1,13 +1,12 @@
 'use server'
 import { revalidatePath } from 'next/cache'
 
-import type { Prisma, TransactionType } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 
 import prisma from '@/lib/prisma'
 import type { DivisionSchemaInput } from '@/schemas/division-schema'
 import { DivisionSchema } from '@/schemas/division-schema'
-import type { CreateDivisionTransactionInput } from '@/schemas/division-transaction-schema'
-import { createDivisionTransactionSchema, DivisionTransactionFormInput } from '@/schemas/division-transaction-schema'
+import { createDivisionTransactionSchema } from '@/schemas/division-transaction-schema'
 
 export type ResponseDivision = Prisma.DivisionGetPayload<{}>
 

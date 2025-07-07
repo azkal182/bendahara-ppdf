@@ -21,6 +21,7 @@ interface DivisiPageViewProps {
 
 const DivisiPageView = ({ divisions }: DivisiPageViewProps) => {
   const [dialogOpen, setDialogOpen] = useState(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [editingDivision, setEditingDivision] = useState<DivisionSchemaInput | undefined>()
   const router = useRouter()
 

@@ -13,7 +13,10 @@ interface PusatTransactionPageViewProps {
 }
 
 const PusatTransactionPageView = ({ data }: PusatTransactionPageViewProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { session } = useAuthStore()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   const [dialogOpen, setDialogOpen] = useState(false)
 
   return (
